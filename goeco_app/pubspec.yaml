@@ -1,0 +1,17 @@
+name: goeco_app
+description: GOECO resident super-app demo
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.5
+  http: ^1.1.0
+  provider: ^6.0.5
+
+flutter:
+  uses-material-design: true
