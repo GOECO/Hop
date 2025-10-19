@@ -1,0 +1,23 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ main, master, work ]
+  pull_request:
+    branches: [ main, master, work ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.5'
+          channel: 'stable'
+      - name: Install dependencies
+        working-directory: goeco_app
+        run: flutter pub get
+      - name: Run tests
+        working-directory: goeco_app
+        run: flutter test
