@@ -26,3 +26,7 @@ flutter run
 ```
 
 Ứng dụng mặc định trỏ tới backend cục bộ. Các luồng demo sử dụng dữ liệu mô phỏng và hiển thị OTP trực tiếp trên UI để tiện thử nghiệm.
+
+## Tài liệu tham khảo
+
+- [Tổng quan nền tảng Goland.ai](docs/goland-ai-overview.md)
