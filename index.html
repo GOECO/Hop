@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hop - Quản lý giao nhận chung cư</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="top-nav" aria-label="Điều hướng chính">
+    <div class="top-nav__brand">
+      <span class="top-nav__logo" aria-hidden="true">🌿</span>
+      <span class="top-nav__name">Hop GoEco Hub</span>
+    </div>
+    <ul class="top-nav__links">
+      <li><a href="#delivery-form">Điều phối</a></li>
+      <li><a href="#mobile-apps">Ứng dụng</a></li>
+      <li><a href="#storage-management">Kệ &amp; tủ</a></li>
+      <li><a href="#onpay-wallet">Ví OnPay</a></li>
+    </ul>
+  </nav>
+  <header class="hero">
+    <div class="hero__content">
+      <p class="hero__badge">Lấy cảm hứng từ trải nghiệm GoEco</p>
+      <h1>Hop</h1>
+      <p>
+        Nền tảng điều phối giao nhận đa kênh cho chung cư với giao diện xanh thân thiện, trải nghiệm mobile
+        tương tự GoEco và quản lý liền mạch giữa cư dân – nhân viên – bảng điều hành.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#mobile-apps">App cư dân</a>
+        <a class="btn" href="#storage-management">Quản lý kệ &amp; tủ</a>
+        <a class="btn" href="#fee-management">Gói phí</a>
+      </div>
+    </div>
+    <div class="hero__card">
+      <h2>Tình hình hôm nay</h2>
+      <div class="stats">
+        <article class="stat">
+          <span class="stat__value" id="stat-waiting">0</span>
+          <span class="stat__label">Chờ xử lý</span>
+        </article>
+        <article class="stat">
+          <span class="stat__value" id="stat-today">0</span>
+          <span class="stat__label">Hoàn tất hôm nay</span>
+        </article>
+        <article class="stat">
+          <span class="stat__value" id="stat-overdue">0</span>
+          <span class="stat__label">Quá 24h</span>
+        </article>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel" id="delivery-form">
+      <h2>Tạo phiếu giao hàng</h2>
+      <form class="form" id="new-delivery-form">
+        <div class="form__row">
+          <label for="recipient-name">Tên cư dân</label>
+          <input type="text" id="recipient-name" name="recipient" placeholder="VD: Nguyễn Văn A" required />
+        </div>
+        <div class="form__row">
+          <label for="apartment">Căn hộ</label>
+          <input type="text" id="apartment" name="apartment" placeholder="VD: B2-1205" required />
+        </div>
+        <div class="form__row">
+          <label for="courier">Đơn vị vận chuyển</label>
+          <input type="text" id="courier" name="courier" placeholder="GHN, GrabExpress..." required />
+        </div>
+        <div class="form__row">
+          <label for="waybill-code">Mã vận đơn</label>
+          <input
+            type="text"
+            id="waybill-code"
+            name="waybillCode"
+            placeholder="VD: GHN123456789"
+            autocomplete="off"
+            required
+          />
+          <p class="form__hint">Nhập hoặc quét mã vận đơn từ nhãn kiện.</p>
+        </div>
+        <div class="form__row">
+          <label for="waybill-photo">Ảnh mã vận đơn</label>
+          <input
+            type="file"
+            id="waybill-photo"
+            name="waybillPhoto"
+            accept="image/*"
+            capture="environment"
+            required
+          />
+          <p class="form__hint">Chụp ảnh nhãn mã vạch/QR để lưu kèm phiếu.</p>
+        </div>
+        <div class="form__row">
+          <label for="storage-select">Vị trí lưu trữ</label>
+          <select id="storage-select" name="storage" required></select>
+        </div>
+        <div class="form__row">
+          <label for="billing-plan-select">Gói phí</label>
+          <select id="billing-plan-select" name="billing" required></select>
+        </div>
+        <div class="form__row">
+          <label for="package-photo">Ảnh kiện hàng</label>
+          <input type="file" id="package-photo" name="packagePhoto" accept="image/*" />
+          <p class="form__hint">Tải ảnh minh chứng để cư dân nhận diện nhanh.</p>
+        </div>
+        <div class="form__row">
+          <label for="notes">Ghi chú</label>
+          <textarea id="notes" name="notes" rows="2" placeholder="Hàng dễ vỡ, gửi tủ lạnh..."></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit">Lưu phiếu</button>
+      </form>
+    </section>
+
+    <section class="panel" id="deliveries">
+      <div class="panel__header">
+        <h2>Danh sách giao nhận</h2>
+        <div class="filters">
+          <label class="filters__item">
+            <span>Trạng thái</span>
+            <select id="status-filter">
+              <option value="all">Tất cả</option>
+              <option value="waiting">Chờ cư dân</option>
+              <option value="notified">Đã thông báo</option>
+              <option value="door">Chờ giao tận cửa</option>
+              <option value="picked">Đã nhận</option>
+            </select>
+          </label>
+          <label class="filters__item">
+            <span>Sắp xếp</span>
+            <select id="sort-order">
+              <option value="desc">Mới nhất</option>
+              <option value="asc">Cũ nhất</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table class="deliveries-table">
+          <thead>
+            <tr>
+              <th>Thời gian</th>
+              <th>Cư dân</th>
+              <th>Căn hộ</th>
+              <th>Đơn vị</th>
+              <th>Mã vận đơn</th>
+              <th>Vị trí</th>
+              <th>Gói phí</th>
+              <th>Ảnh</th>
+              <th>Thanh toán</th>
+              <th>Ghi chú</th>
+              <th>Trạng thái</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="deliveries-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="mobile-apps">
+      <h2>Trải nghiệm ứng dụng di động</h2>
+      <div class="mobile-grid">
+        <article class="phone" aria-labelledby="resident-app-title">
+          <div class="phone__statusbar">
+            <span>09:30</span>
+            <div class="phone__status-icons" aria-hidden="true">
+              <span class="icon">📶</span>
+              <span class="icon">📡</span>
+              <span class="icon">🔋</span>
+            </div>
+          </div>
+          <header class="phone__header">
+            <div>
+              <p class="phone__badge">Hop Cư dân</p>
+              <h3 id="resident-app-title">Người nhận xác nhận hàng</h3>
+            </div>
+            <span class="phone__meta" id="resident-meta"></span>
+          </header>
+          <div class="phone__body">
+            <div class="phone-card phone-card--accent" id="resident-active-card"></div>
+            <section class="phone-section">
+              <h4>Đơn còn lại</h4>
+              <div class="phone-list" id="resident-queue"></div>
+            </section>
+            <section class="phone-section">
+              <h4>Lịch sử nhận hàng</h4>
+              <ul class="phone-history" id="resident-history"></ul>
+            </section>
+          </div>
+          <nav class="phone__nav" aria-label="Điều hướng cư dân">
+            <button class="phone__nav-btn phone__nav-btn--active" type="button">
+              <span aria-hidden="true">🏠</span>
+              <span>Bảng tin</span>
+            </button>
+            <button class="phone__nav-btn" type="button">
+              <span aria-hidden="true">📦</span>
+              <span>Đơn hàng</span>
+            </button>
+            <button class="phone__nav-btn" type="button">
+              <span aria-hidden="true">💳</span>
+              <span>Ví</span>
+            </button>
+            <button class="phone__nav-btn" type="button">
+              <span aria-hidden="true">👤</span>
+              <span>Tài khoản</span>
+            </button>
+          </nav>
+        </article>
+
+        <article class="phone" aria-labelledby="staff-app-title">
+          <div class="phone__statusbar">
+            <span>09:30</span>
+            <div class="phone__status-icons" aria-hidden="true">
+              <span class="icon">📶</span>
+              <span class="icon">📡</span>
+              <span class="icon">🔋</span>
+            </div>
+          </div>
+          <header class="phone__header">
+            <div>
+              <p class="phone__badge phone__badge--staff">Hop Nhân viên</p>
+              <h3 id="staff-app-title">Gửi tại kệ &amp; tủ, mở cửa giao</h3>
+            </div>
+            <span class="phone__meta" id="staff-meta"></span>
+          </header>
+          <div class="phone__body">
+            <section class="phone-section">
+              <h4>Nhiệm vụ hôm nay</h4>
+              <div class="phone-list" id="staff-task-list"></div>
+            </section>
+            <section class="phone-section">
+              <h4>Tổng quan tồn kho</h4>
+              <ul class="phone-history" id="staff-storage"></ul>
+            </section>
+          </div>
+          <nav class="phone__nav" aria-label="Điều hướng nhân viên">
+            <button class="phone__nav-btn phone__nav-btn--active" type="button">
+              <span aria-hidden="true">📋</span>
+              <span>Nhiệm vụ</span>
+            </button>
+            <button class="phone__nav-btn" type="button">
+              <span aria-hidden="true">🔑</span>
+              <span>Mở tủ</span>
+            </button>
+            <button class="phone__nav-btn" type="button">
+              <span aria-hidden="true">📷</span>
+              <span>Quét mã</span>
+            </button>
+            <button class="phone__nav-btn" type="button">
+              <span aria-hidden="true">⚙️</span>
+              <span>Thiết lập</span>
+            </button>
+          </nav>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="storage-management">
+      <h2>Quản lý kệ &amp; tủ</h2>
+      <div class="panel__grid">
+        <form class="form" id="new-storage-form">
+          <div class="form__row">
+            <label for="storage-name">Tên vị trí</label>
+            <input type="text" id="storage-name" name="name" placeholder="VD: Kệ A1" required />
+          </div>
+          <div class="form__row">
+            <label for="storage-type">Loại lưu trữ</label>
+            <select id="storage-type" name="type" required>
+              <option value="shelf">Kệ</option>
+              <option value="locker">Tủ</option>
+              <option value="cooler">Tủ lạnh</option>
+            </select>
+          </div>
+          <div class="form__row">
+            <label for="storage-capacity">Sức chứa</label>
+            <input type="number" id="storage-capacity" name="capacity" min="1" value="10" required />
+          </div>
+          <div class="form__row">
+            <label for="storage-doors">Số ngăn / cửa</label>
+            <input type="number" id="storage-doors" name="doors" min="0" placeholder="VD: 12" />
+          </div>
+          <button class="btn btn--primary" type="submit">Thêm vị trí</button>
+        </form>
+
+        <div class="table-wrapper">
+          <table class="storage-table">
+            <thead>
+              <tr>
+                <th>Tên</th>
+                <th>Loại</th>
+                <th>Sức chứa</th>
+                <th>Đang chứa</th>
+              </tr>
+            </thead>
+            <tbody id="storage-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="fee-management">
+      <h2>Gói phí theo lượt / theo tháng</h2>
+      <div class="panel__grid">
+        <form class="form" id="new-fee-form">
+          <div class="form__row">
+            <label for="fee-name">Tên gói</label>
+            <input type="text" id="fee-name" name="name" placeholder="VD: Giao tận cửa" required />
+          </div>
+          <div class="form__row">
+            <label for="fee-type">Hình thức tính</label>
+            <select id="fee-type" name="type" required>
+              <option value="per-visit">Theo lượt</option>
+              <option value="monthly">Theo tháng</option>
+            </select>
+          </div>
+          <div class="form__row">
+            <label for="fee-price">Đơn giá (VNĐ)</label>
+            <input type="number" id="fee-price" name="price" min="0" step="1000" value="15000" required />
+          </div>
+          <button class="btn btn--primary" type="submit">Tạo gói phí</button>
+        </form>
+
+        <div class="table-wrapper">
+          <table class="fee-table">
+            <thead>
+              <tr>
+                <th>Tên gói</th>
+                <th>Hình thức</th>
+                <th>Đơn giá</th>
+              </tr>
+            </thead>
+            <tbody id="fee-plan-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="pickup">
+      <h2>Quy trình nhận hàng dành cho cư dân</h2>
+      <ol class="guide">
+        <li>Mở app Hop Cư dân để xem vị trí lưu trữ và quét mã tủ / kệ.</li>
+        <li>Xác nhận đã nhận hoặc yêu cầu giao tận cửa ngay trên điện thoại.</li>
+        <li>Nhân viên kiểm tra yêu cầu trong app Hop Nhân viên và mở tủ giao tương ứng.</li>
+        <li>Hoàn tất nhận hàng, hệ thống tự động ghi nhận vào lịch sử và cập nhật tồn kho.</li>
+        <li>Liên hệ lễ tân nếu phát sinh sự cố hoặc quá hạn 24h.</li>
+      </ol>
+
+      <div class="pickup-options">
+        <article class="pickup-card">
+          <h3>Giao tận cửa</h3>
+          <p>Áp dụng gói theo lượt hoặc đăng ký tháng cho cư dân bận rộn.</p>
+        </article>
+        <article class="pickup-card">
+          <h3>Nhận tại kệ</h3>
+          <p>Chỉ cần quét mã trên app để mở khóa và kiểm tra hàng hóa.</p>
+        </article>
+        <article class="pickup-card">
+          <h3>Ký gửi tủ lạnh</h3>
+          <p>Hàng đông lạnh được giữ tối đa 6h, nhắc nhở qua thông báo đẩy.</p>
+        </article>
+      </div>
+    </section>
+    <section class="panel" id="onpay-wallet">
+      <h2>Ví OnPay không tiền mặt</h2>
+      <p class="panel__intro">
+        Theo dõi số dư, lịch sử nạp và dùng ví OnPay để thanh toán phí giao nhận nhanh chóng – không tiền mặt.
+      </p>
+      <div class="wallet">
+        <article class="wallet__card">
+          <header class="wallet__header">
+            <h3>Số dư hiện tại</h3>
+            <span class="wallet__provider">OnPay</span>
+          </header>
+          <p class="wallet__balance" id="wallet-balance-display">0&nbsp;₫</p>
+          <p class="wallet__meta">Mã ví: <span id="wallet-id-display"></span></p>
+        </article>
+        <form class="form wallet__form" id="wallet-topup-form">
+          <div class="form__row">
+            <label for="wallet-topup-amount">Nạp thêm (VNĐ)</label>
+            <input type="number" id="wallet-topup-amount" min="10000" step="10000" value="100000" required />
+            <p class="form__hint">Nạp qua cổng OnPay – hỗ trợ thẻ, ví điện tử và chuyển khoản.</p>
+          </div>
+          <button class="btn btn--primary" type="submit">Nạp ví OnPay</button>
+        </form>
+        <div class="wallet__history">
+          <h3>Lịch sử gần đây</h3>
+          <ul id="wallet-history" class="wallet__history-list"></ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>© 2024 Hop – Nền tảng giao nhận dành cho cư dân chung cư.</small>
+  </footer>
+
+  <div class="toast" id="app-toast" role="status" aria-live="polite" hidden></div>
+
+  <template id="delivery-row-template">
+    <tr>
+      <td class="delivery__time"></td>
+      <td class="delivery__recipient"></td>
+      <td class="delivery__apartment"></td>
+      <td class="delivery__courier"></td>
+      <td class="delivery__waybill"></td>
+      <td class="delivery__storage"></td>
+      <td class="delivery__plan"></td>
+      <td class="delivery__media"></td>
+      <td class="delivery__payment"></td>
+      <td class="delivery__notes"></td>
+      <td class="delivery__status"></td>
+      <td class="delivery__actions"></td>
+    </tr>
+  </template>
+
+  <div class="modal" id="media-modal" hidden role="dialog" aria-modal="true" aria-labelledby="media-modal-title">
+    <div class="modal__content">
+      <header class="modal__header">
+        <h3 id="media-modal-title">Ảnh &amp; mã vận đơn</h3>
+        <button class="modal__close" type="button" data-close-modal>&times;</button>
+      </header>
+      <div class="modal__body" id="media-modal-body"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="pickup-modal" hidden role="dialog" aria-modal="true" aria-labelledby="pickup-modal-title">
+    <div class="modal__content">
+      <header class="modal__header">
+        <h3 id="pickup-modal-title">Xác nhận nhận hàng</h3>
+        <button class="modal__close" type="button" data-close-modal>&times;</button>
+      </header>
+      <form id="pickup-form">
+        <div class="form__row">
+          <label for="pickup-photo">Ảnh khi nhận</label>
+          <input type="file" id="pickup-photo" accept="image/*" required />
+          <div class="modal__preview" id="pickup-photo-preview" hidden>
+            <img src="" alt="Ảnh xác nhận nhận hàng" id="pickup-photo-preview-img" />
+          </div>
+        </div>
+        <section class="wallet-inline">
+          <p>Phí cần thanh toán: <strong id="pickup-amount">0&nbsp;₫</strong></p>
+          <p>Số dư ví OnPay: <strong id="pickup-wallet-balance">0&nbsp;₫</strong></p>
+          <div class="wallet-inline__topup">
+            <input type="number" id="pickup-topup-amount" min="10000" step="10000" placeholder="Nạp thêm (VNĐ)" />
+            <button type="button" id="pickup-topup-button" class="btn">Nạp OnPay</button>
+          </div>
+          <p class="wallet-inline__hint">Thanh toán tức thời qua cổng OnPay, hỗ trợ quét QR và thẻ.</p>
+        </section>
+        <div class="modal__actions">
+          <button type="button" class="btn" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--primary">Xác nhận &amp; thanh toán</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js" type="module"></script>
+</body>
+</html>
