@@ -1,0 +1,7 @@
+node_modules/
+**/node_modules/
+.env
+.DS_Store
+flutter_export_environment.sh
+build/
+.dart_tool/
