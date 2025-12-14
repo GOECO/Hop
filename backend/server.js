@@ -8,6 +8,7 @@ import packageRouter from './routes/packages.js';
 import shipmentRouter from './routes/shipments.js';
 import walletRouter from './routes/wallet.js';
 import eventRouter from './routes/events.js';
+import gofamRouter from './routes/gofam.js';
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.use('/api/packages', packageRouter);
 app.use('/api/shipments', shipmentRouter);
 app.use('/api/wallet', walletRouter);
 app.use('/api/events', eventRouter);
+app.use('/api/gofam', gofamRouter);
 
 app.use((err, _req, res, _next) => {
   console.error(err);
