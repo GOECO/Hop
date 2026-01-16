@@ -160,3 +160,27 @@ final myRecordsProvider = StreamProvider((ref) {
   return repo.watchMyRecords();
 });
 ```
+
+## 8) Màn hình cốt lõi (UI flow) – code định hướng
+
+### 8.1 Create Value Screen (offline-first)
+- Form nhập **amount**, **type**, **description**.
+- Pick evidence (image/pdf).
+- Generate QR (cho offline).
+- **Luật UI**: bấm “Create” → status = `pendingValidation`.
+
+### 8.2 Validation Center Screen
+- List pending records.
+- Record detail: evidence viewer + validators list.
+- Approve / Dispute (tạo `Validation` entity).
+- Sync ngay nếu có mạng.
+
+### 8.3 Distribution Screen
+- **Chỉ bật nút “Distribute” khi `validated`**.
+- Gọi server: `POST /records/{id}/distribute`.
+- Nhận breakdown donut + ledger.
+
+### 8.4 Roles Screen
+- Hiển thị role hiện tại (Creator/Operator/Guide).
+- Checklist KPI chu kỳ.
+- Lịch sử upgrade/demotion (timeline).
