@@ -184,3 +184,13 @@ final myRecordsProvider = StreamProvider((ref) {
 - Hiển thị role hiện tại (Creator/Operator/Guide).
 - Checklist KPI chu kỳ.
 - Lịch sử upgrade/demotion (timeline).
+
+## 9) QR Offline Validation (luồng chuẩn)
+
+**Generate QR payload (tối thiểu)**
+- `recordId` (local UUID)
+- `amount`
+- `currency`
+- `creatorId`
+- `createdAt` (ISO-8601)
+- `hash` (audit hash của record)
