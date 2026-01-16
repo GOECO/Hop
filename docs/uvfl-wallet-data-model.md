@@ -204,3 +204,20 @@ final myRecordsProvider = StreamProvider((ref) {
   "createdAt": "2026-01-15T10:00:00Z"
 }
 ```
+
+## 10) API endpoints tối thiểu (backend)
+
+**Danh sách endpoints**
+- `POST /auth/login`
+- `POST /records` (create)
+- `POST /records/{id}/evidence` (upload)
+- `POST /records/{id}/validations` (approve/dispute)
+- `POST /records/{id}/distribute` (server compute)
+- `GET /records?mine=1`
+- `GET /records/{id}`
+- `GET /cycles/current`
+- `POST /sync/batch` (đẩy offline logs/records theo lô)
+- `GET /audit?recordId=...`
+
+**Nguyên tắc response**
+- Server trả về `ruleVersion`, `ceilingPercent`, `distributionBreakdown`.
