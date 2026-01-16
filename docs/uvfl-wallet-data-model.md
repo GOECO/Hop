@@ -194,3 +194,13 @@ final myRecordsProvider = StreamProvider((ref) {
 - `creatorId`
 - `createdAt` (ISO-8601)
 - `hash` (audit hash của record)
+
+**Ví dụ payload JSON tối thiểu**
+```json
+{
+  "v": 1,
+  "recordLocalId": "uuid",
+  "recordHash": "sha256...",
+  "createdAt": "2026-01-15T10:00:00Z"
+}
+```
