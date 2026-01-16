@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'presentation/screens/home_screen.dart';
+import 'presentation/routes.dart';
 
-class UvflApp extends StatelessWidget {
+class UvflApp extends ConsumerWidget {
   const UvflApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
       title: 'UVFL Wallet',
-      theme: ThemeData.light(useMaterial3: true),
-      darkTheme: ThemeData.dark(useMaterial3: true),
-      home: const HomeScreen(),
+      theme: ThemeData(useMaterial3: true),
+      routerConfig: router,
     );
   }
 }
