@@ -146,3 +146,17 @@ abstract class ValueRecordRepository {
   Future<ValueRecord> getById(String id);
 }
 ```
+
+**Ví dụ Riverpod providers (Dart)**
+```dart
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final valueRecordRepoProvider = Provider<ValueRecordRepository>((ref) {
+  throw UnimplementedError();
+});
+
+final myRecordsProvider = StreamProvider((ref) {
+  final repo = ref.watch(valueRecordRepoProvider);
+  return repo.watchMyRecords();
+});
+```
