@@ -1,0 +1,32 @@
+name: uvfl_wallet
+description: UVFL Wallet app (offline-first validation and distribution).
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.5.1
+  go_router: ^14.2.0
+  drift: ^2.19.0
+  drift_flutter: ^0.1.0
+  dio: ^5.5.0
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^5.1.1
+  crypto: ^3.0.3
+  intl: ^0.19.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.11
+  drift_dev: ^2.19.0
+
+flutter:
+  uses-material-design: true
