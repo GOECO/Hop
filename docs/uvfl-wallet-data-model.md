@@ -75,3 +75,17 @@ Các entity bên dưới đủ để code offline-first + validation + distribut
 - `SyncStatus`: `pending`, `synced`, `failed`
 - `RecordType`: `online`, `offline`
 - `ValidationDecision`: `approve`, `dispute`
+
+## 7) Luật (rules) nằm ở đâu?
+
+**Nguyên tắc phân tách**
+- **Backend là source of truth**: rule engine đầy đủ, tính validation result, distribution, trust score và audit log để tránh gian lận.
+- **App chỉ hiển thị + mô phỏng**: không quyết định kết quả cuối cùng, chỉ giúp người dùng hiểu.
+
+**Rule engine nhẹ trên app (để đảm bảo UX minh bạch)**
+- **Lock flow**: không cho phát distribution nếu record chưa `validated`.
+- **Simulator**: mô phỏng phân phối theo rule set hiện hành để minh bạch (display-only).
+
+**Gợi ý cấu trúc code trong `uvfl_wallet/`**
+- `domain/rules/`: rule set nhẹ phục vụ simulator + kiểm tra trạng thái flow.
+- `data/remote_api/`: gọi backend rule engine để lấy kết quả chính thức.
