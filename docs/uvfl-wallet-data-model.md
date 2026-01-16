@@ -116,3 +116,22 @@ class UvflStateMachine {
   static RecordStatus onDistributed() => RecordStatus.distributed;
 }
 ```
+
+**Ví dụ hash audit (Dart, SHA-256)**
+```dart
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
+String sha256Hex(String input) =>
+    sha256.convert(utf8.encode(input)).toString();
+
+String makeAuditHash({
+  required String prevHash,
+  required String action,
+  required String actorId,
+  required String payloadJson,
+  required String isoTime,
+}) {
+  return sha256Hex('$prevHash|$action|$actorId|$payloadJson|$isoTime');
+}
+```
