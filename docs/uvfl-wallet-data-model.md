@@ -89,3 +89,30 @@ Các entity bên dưới đủ để code offline-first + validation + distribut
 **Gợi ý cấu trúc code trong `uvfl_wallet/`**
 - `domain/rules/`: rule set nhẹ phục vụ simulator + kiểm tra trạng thái flow.
 - `data/remote_api/`: gọi backend rule engine để lấy kết quả chính thức.
+
+**Ví dụ state machine (Dart) cho lock flow**
+```dart
+enum RecordStatus {
+  draft,
+  pendingValidation,
+  validated,
+  disputed,
+  distributed,
+}
+
+class UvflStateMachine {
+  static bool canValidate(RecordStatus s) =>
+      s == RecordStatus.pendingValidation;
+
+  static bool canDistribute(RecordStatus s) =>
+      s == RecordStatus.validated;
+
+  static RecordStatus onCreated() => RecordStatus.pendingValidation;
+
+  static RecordStatus onValidationApproved() => RecordStatus.validated;
+
+  static RecordStatus onValidationDisputed() => RecordStatus.disputed;
+
+  static RecordStatus onDistributed() => RecordStatus.distributed;
+}
+```
