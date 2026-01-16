@@ -135,3 +135,14 @@ String makeAuditHash({
   return sha256Hex('$prevHash|$action|$actorId|$payloadJson|$isoTime');
 }
 ```
+
+**Ví dụ repository interface (Dart)**
+```dart
+abstract class ValueRecordRepository {
+  Future<String> createRecord(ValueRecordDraft draft); // returns local id
+  Future<void> attachEvidence(String localId, String filePath);
+  Future<void> requestSync(String localId);
+  Stream<List<ValueRecord>> watchMyRecords();
+  Future<ValueRecord> getById(String id);
+}
+```
