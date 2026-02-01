@@ -1,0 +1,2 @@
+Project prompt template.
+Describe the project goals, key workflows, and any special constraints.

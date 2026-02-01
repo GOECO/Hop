@@ -1,0 +1,2 @@
+GOECO Super App demo assistant prompt.
+Focus on the Flutter app, backend API, and documentation in this repository.
