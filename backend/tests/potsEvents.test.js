@@ -117,3 +117,13 @@ test('counter sales are recorded as cashier-confirmed cash, not bank verificatio
    assert.equal(snapshot.body.orders[0].payment_status,'cash_recorded');
  });
 });
+
+test('counter bank transfer remains pending, not falsely reported paid',async()=>{
+ await session(async url=>{
+   const event=payload('pos.counter.created',9);
+   event.payload.payment_status='pending';
+   assert.equal((await post(url,event)).status,200);
+   const snapshot=await orders(url);
+   assert.equal(snapshot.body.orders[0].payment_status,'pending');
+ });
+});

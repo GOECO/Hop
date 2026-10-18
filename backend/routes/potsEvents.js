@@ -56,7 +56,10 @@ export function validateEvent(body) {
     'pos.order.cash_recorded': ['accepted','cash_recorded']
   };
   const [state, payment] = allowed[type];
-  if (p.fulfillment_state !== state || p.payment_status !== payment)
+  const validPayment = type === 'pos.counter.created'
+    ? ['pending','cash_recorded'].includes(p.payment_status)
+    : p.payment_status === payment;
+  if (p.fulfillment_state !== state || !validPayment)
     throw failure(422,'Invalid event state');
   return { id, type, payload: p };
 }
