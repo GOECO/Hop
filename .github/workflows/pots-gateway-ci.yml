@@ -1,0 +1,19 @@
+name: GOECO POTS Event Receiver CI
+on:
+  pull_request:
+  push:
+    branches: [main, "feat/**"]
+jobs:
+  receiver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Install backend dependencies
+        run: npm --prefix backend install --no-audit --no-fund
+      - name: Syntax verification
+        run: node --check backend/server.js && node --check backend/routes/potsEvents.js
+      - name: Signed GOECO inbox tests
+        run: node --test backend/tests/potsEvents.test.js
