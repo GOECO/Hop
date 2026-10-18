@@ -9,9 +9,12 @@ import shipmentRouter from './routes/shipments.js';
 import walletRouter from './routes/wallet.js';
 import eventRouter from './routes/events.js';
 import gofamRouter from './routes/gofam.js';
+import { createPotsEventsRouter } from './routes/potsEvents.js';
 
 const app = express();
 app.use(cors());
+// Raw body MUST be captured before express.json() for HMAC verification.
+app.use('/api/integrations/pots', express.raw({type:'application/json',limit:'16kb'}), createPotsEventsRouter());
 app.use(express.json());
 app.use(morgan('dev'));
 
